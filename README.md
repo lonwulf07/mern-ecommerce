@@ -57,8 +57,8 @@ Want to run this project on your own machine? Follow these steps:
 
 ### 1. Clone the Repository
 ```bash
-git clone [https://github.com/](https://github.com/)[YOUR-GITHUB-USERNAME]/[YOUR-REPO-NAME].git
-cd [YOUR-REPO-NAME]
+git clone https://github.com/lonwulf07/mern-ecommerce.git
+cd mern-ecommerce
 ```
 
 ### 2. Install Dependencies
@@ -87,7 +87,7 @@ Populate the database with sample users and products to get started quickly:
 # WARNING: This will destroy any existing data in your database!
 npm run data:import 
 ```
-*Note: The default Admin login is `admin@example.com` / `password123`.*
+*Note: The default Admin login is `test@xyz.com` / `test@1234`.*
 
 ### 5. Run the Application
 Boot up both the Express backend and React frontend concurrently:
@@ -99,4 +99,4 @@ The application will automatically open in your browser at `http://localhost:300
 ---
 
 ## 🤝 Let's Connect!
-Created by **[Your Name]** - Feel free to reach out to me on [LinkedIn](https://linkedin.com/in/your-profile) or check out my other projects!
+Created by **Mohit Sharma** - Feel free to reach out to me on [LinkedIn](https://linkedin.com/in/mohit-ml/) or check out my other projects!
