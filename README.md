@@ -1,4 +1,3 @@
-<img width="1920" height="932" alt="2026-04-10 13_35_28-" src="https://github.com/user-attachments/assets/9e6bd32f-f7a1-44c0-9646-fc29f92f4f3d" />
 # TechShop: MERN E-Commerce Platform 🛒
 
 ![MERN Stack](https://img.shields.io/badge/MERN-Stack-blue?logo=mongodb)
