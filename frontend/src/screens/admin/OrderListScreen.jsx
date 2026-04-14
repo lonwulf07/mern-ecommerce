@@ -3,6 +3,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Table, Button, Alert } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { formatPrice } from '../../utils/formatPrice';
 
 const OrderListScreen = () => {
   const [orders, setOrders] = useState([]);
@@ -59,7 +60,7 @@ const OrderListScreen = () => {
                   : "Deleted User"}
               </td>
               <td>{order.createdAt.substring(0, 10)}</td>
-              <td>₹{order.totalPrice.toFixed(2)}</td>
+              <td>₹{formatPrice(order.totalPrice)}</td>
               <td>
                 {order.isPaid ? (
                   order.paidAt.substring(0, 10)

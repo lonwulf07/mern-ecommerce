@@ -12,6 +12,7 @@ import {
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { formatPrice } from '../utils/formatPrice';
 
 const OrderScreen = () => {
   const { id: orderId } = useParams();
@@ -173,8 +174,8 @@ const OrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ₹{item.price} = ₹
-                          {(item.qty * item.price).toFixed(2)}
+                          {item.qty} x ₹{formatPrice(item.price)} = ₹
+                          {formatPrice(item.qty * item.price)}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -194,19 +195,19 @@ const OrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>₹{order.itemsPrice.toFixed(2)}</Col>
+                  <Col>₹{formatPrice(order.itemsPrice)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>₹{order.shippingPrice.toFixed(2)}</Col>
+                  <Col>₹{formatPrice(order.shippingPrice)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>₹{order.taxPrice.toFixed(2)}</Col>
+                  <Col>₹{formatPrice(order.taxPrice)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
@@ -215,7 +216,7 @@ const OrderScreen = () => {
                     <strong>Total</strong>
                   </Col>
                   <Col>
-                    <strong>₹{order.totalPrice.toFixed(2)}</strong>
+                    <strong>₹{formatPrice(order.totalPrice)}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>

@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Paginate from "../../components/Paginate";
+import { formatPrice } from '../../utils/formatPrice';
 
 const ProductListScreen = () => {
   const { pageNumber } = useParams();
@@ -102,7 +103,7 @@ const ProductListScreen = () => {
             <tr key={product._id}>
               <td>{product._id}</td>
               <td>{product.name}</td>
-              <td>₹{product.price}</td>
+              <td>₹{formatPrice(product.price)}</td>
               <td>{product.category}</td>
               <td>{product.brand}</td>
               <td>

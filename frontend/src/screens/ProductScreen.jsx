@@ -13,6 +13,7 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import { addToCart } from "../slices/cartSlice";
+import { formatPrice } from '../utils/formatPrice';
 
 const ProductScreen = () => {
   const { id: productId } = useParams();
@@ -83,7 +84,7 @@ const ProductScreen = () => {
             <ListGroup.Item>
               <h3>{product.name}</h3>
             </ListGroup.Item>
-            <ListGroup.Item>Price: ₹{product.price}</ListGroup.Item>
+            <ListGroup.Item>Price: ₹{formatPrice(product.price)}</ListGroup.Item>
             <ListGroup.Item>Description: {product.description}</ListGroup.Item>
           </ListGroup>
         </Col>
@@ -96,7 +97,7 @@ const ProductScreen = () => {
                 <Row>
                   <Col>Price:</Col>
                   <Col>
-                    <strong>₹{product.price}</strong>
+                    <strong>₹{formatPrice(product.price)}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>

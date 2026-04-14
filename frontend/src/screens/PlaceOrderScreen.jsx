@@ -5,6 +5,7 @@ import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import axios from "axios";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { clearCartItems } from "../slices/cartSlice";
+import { formatPrice } from "../utils/formatPrice";
 
 const PlaceOrderScreen = () => {
   const navigate = useNavigate();
@@ -21,35 +22,27 @@ const PlaceOrderScreen = () => {
     }
   }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
 
-  const addDecimals = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(2);
-  };
-
-  const itemsPrice = addDecimals(
+  const itemsPrice = Math.round(
     cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
   );
 
-  const shippingPrice = addDecimals(itemsPrice > 100 ? 0 : 10);
+  const shippingPrice = itemsPrice > 1000 ? 0 : 100;
 
-  const taxPrice = addDecimals(Number((0.15 * itemsPrice).toFixed(2)));
+  const taxPrice = Math.round(0.15 * itemsPrice);
 
-  const totalPrice = (
-    Number(itemsPrice) +
-    Number(shippingPrice) +
-    Number(taxPrice)
-  ).toFixed(2);
+  const totalPrice = itemsPrice + shippingPrice + taxPrice;
 
   const placeOrderHandler = async () => {
     try {
       const config = {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
 
       const { data } = await axios.post(
-        '/api/orders',
+        "/api/orders",
         {
           orderItems: cart.cartItems.map((item) => ({
             ...item,
@@ -62,15 +55,14 @@ const PlaceOrderScreen = () => {
           taxPrice,
           totalPrice,
         },
-        config
+        config,
       );
 
       dispatch(clearCartItems());
 
       navigate(`/order/${data._id}`);
-      
     } catch (error) {
-      alert(error.response?.data?.message || 'Error placing order');
+      alert(error.response?.data?.message || "Error placing order");
     }
   };
 
@@ -117,8 +109,8 @@ const PlaceOrderScreen = () => {
                           <Link to={`/product/${item._id}`}>{item.name}</Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ₹{item.price} = ₹
-                          {addDecimals(item.qty * item.price)}
+                          {item.qty} x ₹{formatPrice(item.price)} = ₹
+                          {formatPrice(item.qty * item.price)}
                         </Col>
                       </Row>
                     </ListGroup.Item>
@@ -139,21 +131,21 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>₹{itemsPrice}</Col>
+                  <Col>₹{formatPrice(itemsPrice)}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>₹{shippingPrice}</Col>
+                  <Col>₹{formatPrice(shippingPrice)}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>₹{taxPrice}</Col>
+                  <Col>₹{formatPrice(taxPrice)}</Col>
                 </Row>
               </ListGroup.Item>
 
@@ -163,7 +155,7 @@ const PlaceOrderScreen = () => {
                     <strong>Total</strong>
                   </Col>
                   <Col>
-                    <strong>₹{totalPrice}</strong>
+                    <strong>₹{formatPrice(totalPrice)}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>

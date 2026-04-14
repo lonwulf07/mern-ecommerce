@@ -4,6 +4,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setCredentials } from "../slices/authSlice";
+import { formatPrice } from '../utils/formatPrice';
 
 const ProfileScreen = () => {
   const [name, setName] = useState("");
@@ -151,7 +152,7 @@ const ProfileScreen = () => {
                 <tr key={order._id}>
                   <td>{order._id}</td>
                   <td>{order.createdAt.substring(0, 10)}</td>
-                  <td>₹{order.totalPrice.toFixed(2)}</td>
+                  <td>₹{formatPrice(order.totalPrice)}</td>
                   <td>
                     {order.isPaid ? (
                       order.paidAt.substring(0, 10)
