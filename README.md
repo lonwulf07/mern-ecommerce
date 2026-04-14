@@ -13,8 +13,7 @@ I built this project to master full-stack state management, secure API architect
 
 ## 📸 Project Screenshots
 
-*(Add a screenshot of your homepage here! Just drag and drop an image into GitHub's editor to generate a link)*
-`![Home Page Screenshot](link-to-your-image.png)`
+<img width="1920" height="932" alt="2026-04-10 13_35_28-" src="https://github.com/user-attachments/assets/9e6bd32f-f7a1-44c0-9646-fc29f92f4f3d" />
 
 ## ✨ Key Features
 
