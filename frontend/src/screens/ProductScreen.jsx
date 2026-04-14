@@ -15,7 +15,6 @@ import axios from "axios";
 import { addToCart } from "../slices/cartSlice";
 
 const ProductScreen = () => {
-  // useParams() grabs the ':id' from the URL (e.g., localhost:3000/product/12345)
   const { id: productId } = useParams();
 
   const dispatch = useDispatch();
@@ -28,12 +27,10 @@ const ProductScreen = () => {
   const [comment, setComment] = useState("");
   const [loadingReview, setLoadingReview] = useState(false);
 
-  // We need to know if the user is logged in to show the form!
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      // Fetch the single product using the ID from the URL
       const { data } = await axios.get(`/api/products/${productId}`);
       setProduct(data);
     };
@@ -42,9 +39,7 @@ const ProductScreen = () => {
   }, [productId]);
 
   const addToCartHandler = () => {
-    // Send the product and the chosen quantity to our Redux store
     dispatch(addToCart({ ...product, qty }));
-    // Immediately redirect the user to the Cart screen
     navigate("/cart");
   };
 
@@ -63,7 +58,6 @@ const ProductScreen = () => {
       setLoadingReview(false);
       alert("Review Submitted!");
 
-      // Reload the page to instantly show their new review
       window.location.reload();
     } catch (err) {
       setLoadingReview(false);
@@ -78,24 +72,23 @@ const ProductScreen = () => {
       </Link>
 
       <Row>
-        {/* Column 1: Product Image */}
+        {/* Product Image */}
         <Col md={5}>
-          {/* fluid keeps the image from breaking outside its container */}
           <Image src={product.image} alt={product.name} fluid />
         </Col>
 
-        {/* Column 2: Product Details */}
+        {/* Product Details */}
         <Col md={4}>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h3>{product.name}</h3>
             </ListGroup.Item>
-            <ListGroup.Item>Price: ${product.price}</ListGroup.Item>
+            <ListGroup.Item>Price: ₹{product.price}</ListGroup.Item>
             <ListGroup.Item>Description: {product.description}</ListGroup.Item>
           </ListGroup>
         </Col>
 
-        {/* Column 3: The "Add to Cart" Action Box */}
+        {/* The "Add to Cart" Action Box */}
         <Col md={3}>
           <Card>
             <ListGroup variant="flush">
@@ -103,7 +96,7 @@ const ProductScreen = () => {
                 <Row>
                   <Col>Price:</Col>
                   <Col>
-                    <strong>${product.price}</strong>
+                    <strong>₹{product.price}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -112,13 +105,12 @@ const ProductScreen = () => {
                 <Row>
                   <Col>Status:</Col>
                   <Col>
-                    {/* Check our database field to see if we have inventory */}
                     {product.countInStock > 0 ? "In Stock" : "Out Of Stock"}
                   </Col>
                 </Row>
               </ListGroup.Item>
 
-              {/* NEW: Quantity Dropdown (Only show if in stock) */}
+              {/* Quantity Dropdown (Only show if in stock) */}
               {product.countInStock > 0 && (
                 <ListGroup.Item>
                   <Row>
@@ -129,7 +121,6 @@ const ProductScreen = () => {
                         value={qty}
                         onChange={(e) => setQty(Number(e.target.value))}
                       >
-                        {/* Create an array like [1, 2, 3] up to the stock limit */}
                         {[...Array(product.countInStock).keys()].map((x) => (
                           <option key={x + 1} value={x + 1}>
                             {x + 1}
@@ -164,12 +155,10 @@ const ProductScreen = () => {
           )}
 
           <ListGroup variant="flush">
-            {/* Loop through and show existing reviews */}
             {product.reviews?.map((review) => (
               <ListGroup.Item key={review._id}>
                 <strong>{review.name}</strong>
                 <div>
-                  {/* Super basic star rendering just to show the number for now */}
                   Rating: {review.rating} / 5 Stars
                 </div>
                 <p>{review.createdAt.substring(0, 10)}</p>

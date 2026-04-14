@@ -6,16 +6,13 @@ const SearchBox = () => {
   const navigate = useNavigate();
   const { keyword: urlKeyword } = useParams();
 
-  // If there's a keyword in the URL, fill the search box with it initially
   const [keyword, setKeyword] = useState(urlKeyword || "");
 
   const submitHandler = (e) => {
     e.preventDefault();
     if (keyword.trim()) {
-      // If they typed something, redirect to the search route
       navigate(`/search/${keyword.trim()}`);
     } else {
-      // If they submitted empty, just go to the homepage
       navigate("/");
     }
   };

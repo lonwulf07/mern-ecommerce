@@ -44,10 +44,8 @@ const ProductEditScreen = () => {
   }, [productId]);
 
   const uploadFileHandler = async (e) => {
-    // Grab the first file the user selected
     const file = e.target.files[0];
 
-    // We must use FormData when sending files over the internet
     const formData = new FormData();
     formData.append("image", file);
 
@@ -59,10 +57,8 @@ const ProductEditScreen = () => {
         },
       };
 
-      // Send the file to our backend
       const { data } = await axios.post("/api/upload", formData, config);
 
-      // Update the image text field with the new path!
       setImage(data.image);
       setLoadingUpload(false);
     } catch (err) {
@@ -81,7 +77,6 @@ const ProductEditScreen = () => {
         config,
       );
 
-      // Redirect back to the table after saving!
       navigate("/admin/productlist");
     } catch (err) {
       alert(err.response?.data?.message || "Error updating product");
@@ -127,7 +122,7 @@ const ProductEditScreen = () => {
             value={image}
             onChange={(e) => setImage(e.target.value)}
           />
-          {/* THE NEW FILE PICKER */}
+          
           <Form.Control
             type="file"
             label="Choose file"

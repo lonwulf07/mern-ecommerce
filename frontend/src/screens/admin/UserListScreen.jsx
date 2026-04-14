@@ -35,7 +35,6 @@ const UserListScreen = () => {
         };
         await axios.delete(`/api/users/${id}`, config);
 
-        // Refresh the list after deleting
         fetchUsers();
       } catch (err) {
         alert(err.response?.data?.message || "Error deleting user");
@@ -84,7 +83,7 @@ const UserListScreen = () => {
                   variant="danger"
                   className="btn-sm"
                   onClick={() => deleteHandler(user._id)}
-                  disabled={user.isAdmin} // Disable the button so we don't accidentally delete ourselves!
+                  disabled={user.isAdmin}
                 >
                   <i className="fas fa-trash" style={{ color: "white" }}></i>
                 </Button>

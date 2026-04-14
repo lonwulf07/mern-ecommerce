@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 const Product = ({ product }) => {
   return (
     <Card className="my-3 p-3 rounded">
-      {/* We use Link instead of <a> tags so the page doesn't refresh */}
       <Link to={`/product/${product._id}`}>
         <Card.Img src={product.image} variant="top" />
       </Link>
@@ -16,9 +15,7 @@ const Product = ({ product }) => {
           </Card.Title>
         </Link>
 
-        {/* Rating and Reviews could go here later */}
-
-        <Card.Text as="h3">${product.price}</Card.Text>
+        <Card.Text as="h3">₹{product.price}</Card.Text>
       </Card.Body>
     </Card>
   );

@@ -13,7 +13,6 @@ const PlaceOrderScreen = () => {
   const dispatch = useDispatch();
   const { userInfo } = useSelector((state) => state.auth);
 
-  // Security Check: Make sure they actually filled out the previous steps!
   useEffect(() => {
     if (!cart.shippingAddress.address) {
       navigate("/shipping");
@@ -22,24 +21,18 @@ const PlaceOrderScreen = () => {
     }
   }, [cart.paymentMethod, cart.shippingAddress.address, navigate]);
 
-  // --- PRICE CALCULATIONS ---
-  // Helper function to ensure we always have 2 decimal places (e.g., $10.00 instead of $10)
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
   };
 
-  // 1. Calculate the cost of just the items
   const itemsPrice = addDecimals(
     cart.cartItems.reduce((acc, item) => acc + item.price * item.qty, 0),
   );
 
-  // 2. Calculate Shipping (Free if over $100, otherwise $10 flat rate)
   const shippingPrice = addDecimals(itemsPrice > 100 ? 0 : 10);
 
-  // 3. Calculate Tax (Flat 15% for this example)
   const taxPrice = addDecimals(Number((0.15 * itemsPrice).toFixed(2)));
 
-  // 4. Calculate Total
   const totalPrice = (
     Number(itemsPrice) +
     Number(shippingPrice) +
@@ -48,7 +41,6 @@ const PlaceOrderScreen = () => {
 
   const placeOrderHandler = async () => {
     try {
-      // 1. Setup our headers with the secure JWT token
       const config = {
         headers: {
           'Content-Type': 'application/json',
@@ -56,13 +48,12 @@ const PlaceOrderScreen = () => {
         },
       };
 
-      // 2. Send the massive order object to our backend
       const { data } = await axios.post(
         '/api/orders',
         {
           orderItems: cart.cartItems.map((item) => ({
             ...item,
-            product: item._id, // Include the product ID for backend reference
+            product: item._id,
           })),
           shippingAddress: cart.shippingAddress,
           paymentMethod: cart.paymentMethod,
@@ -74,10 +65,8 @@ const PlaceOrderScreen = () => {
         config
       );
 
-      // 3. If successful, clear the cart
       dispatch(clearCartItems());
 
-      // 4. Redirect the user to their shiny new Order Details page
       navigate(`/order/${data._id}`);
       
     } catch (error) {
@@ -89,7 +78,6 @@ const PlaceOrderScreen = () => {
     <>
       <CheckoutSteps step1 step2 step3 step4 />
       <Row>
-        {/* Left Column: The Order Details */}
         <Col md={8}>
           <ListGroup variant="flush">
             <ListGroup.Item>
@@ -129,7 +117,7 @@ const PlaceOrderScreen = () => {
                           <Link to={`/product/${item._id}`}>{item.name}</Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ${item.price} = $
+                          {item.qty} x ₹{item.price} = ₹
                           {addDecimals(item.qty * item.price)}
                         </Col>
                       </Row>
@@ -141,7 +129,6 @@ const PlaceOrderScreen = () => {
           </ListGroup>
         </Col>
 
-        {/* Right Column: The Price Summary Card */}
         <Col md={4}>
           <Card>
             <ListGroup variant="flush">
@@ -152,21 +139,21 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>${itemsPrice}</Col>
+                  <Col>₹{itemsPrice}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>${shippingPrice}</Col>
+                  <Col>₹{shippingPrice}</Col>
                 </Row>
               </ListGroup.Item>
 
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${taxPrice}</Col>
+                  <Col>₹{taxPrice}</Col>
                 </Row>
               </ListGroup.Item>
 
@@ -176,7 +163,7 @@ const PlaceOrderScreen = () => {
                     <strong>Total</strong>
                   </Col>
                   <Col>
-                    <strong>${totalPrice}</strong>
+                    <strong>₹{totalPrice}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>

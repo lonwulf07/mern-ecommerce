@@ -6,11 +6,11 @@ import { saveShippingAddress } from "../slices/cartSlice";
 import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingScreen = () => {
-  // Pull the existing address from Redux if they've typed it before
+  // Get existing shipping address from Redux (if any)
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
-  // Initialize state with Redux data (or empty strings if new)
+  // Local state for form fields, initialized with existing shipping address if available
   const [address, setAddress] = useState(shippingAddress?.address || "");
   const [city, setCity] = useState(shippingAddress?.city || "");
   const [postalCode, setPostalCode] = useState(
@@ -23,16 +23,13 @@ const ShippingScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // Dispatch to Redux
     dispatch(saveShippingAddress({ address, city, postalCode, country }));
-    // Move to the next step
     navigate("/payment");
   };
 
   return (
     <Row className="justify-content-md-center">
       <Col xs={12} md={6}>
-        {/* Pass in step1 and step2 as true to highlight them in the Nav */}
         <CheckoutSteps step1 step2 />
 
         <h1>Shipping</h1>

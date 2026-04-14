@@ -14,7 +14,7 @@ const RegisterScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Remember where the user was trying to go before they clicked Register
+  // Get the redirect query parameter if it exists, so we can send them to the right place after registering
   const { search } = useLocation();
   const sp = new URLSearchParams(search);
   const redirect = sp.get("redirect") || "/";
@@ -22,7 +22,7 @@ const RegisterScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // If they are already logged in, send them away from the register page
+    // If the user is already logged in, redirect them away from the register page
     if (userInfo) {
       navigate(redirect);
     }
@@ -31,21 +31,21 @@ const RegisterScreen = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    // Check if the passwords match before sending to the backend
+    // Basic client-side validation to check if passwords match
     if (password !== confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
 
     try {
-      // Send the new user data to our backend API
+      // Make a POST request to the backend to register the user
       const { data } = await axios.post("/api/users", {
         name,
         email,
         password,
       });
 
-      // Save the new user (and their token) to Redux so they are instantly logged in
+      // If registration is successful, store the user info in Redux and redirect them
       dispatch(setCredentials(data));
       navigate(redirect);
     } catch (error) {

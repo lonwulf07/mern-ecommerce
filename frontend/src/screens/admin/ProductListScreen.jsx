@@ -40,7 +40,6 @@ const ProductListScreen = () => {
   }, [pageNumber]);
 
   const deleteHandler = async (id) => {
-    // Always ask for confirmation before deleting a product!
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         const config = {
@@ -48,7 +47,6 @@ const ProductListScreen = () => {
         };
         await axios.delete(`/api/products/${id}`, config);
 
-        // Re-fetch the products so the deleted one disappears from the screen
         fetchProducts();
       } catch (err) {
         alert(err.response?.data?.message || "Error deleting product");
@@ -63,10 +61,8 @@ const ProductListScreen = () => {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         };
 
-        // We pass an empty object {} because the backend generates the dummy data!
         const { data } = await axios.post("/api/products", {}, config);
 
-        // Instantly redirect them to the edit screen for their new product
         navigate(`/admin/product/${data._id}/edit`);
       } catch (err) {
         alert(err.response?.data?.message || "Error creating product");
@@ -106,7 +102,7 @@ const ProductListScreen = () => {
             <tr key={product._id}>
               <td>{product._id}</td>
               <td>{product.name}</td>
-              <td>${product.price}</td>
+              <td>₹{product.price}</td>
               <td>{product.category}</td>
               <td>{product.brand}</td>
               <td>

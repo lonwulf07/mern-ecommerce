@@ -53,14 +53,13 @@ const OrderListScreen = () => {
           {orders.map((order) => (
             <tr key={order._id}>
               <td>{order._id}</td>
-              {/* If the user was deleted, we just show 'Deleted User' */}
               <td>
                 {order.user && order.user.name
                   ? order.user.name
                   : "Deleted User"}
               </td>
               <td>{order.createdAt.substring(0, 10)}</td>
-              <td>${order.totalPrice.toFixed(2)}</td>
+              <td>₹{order.totalPrice.toFixed(2)}</td>
               <td>
                 {order.isPaid ? (
                   order.paidAt.substring(0, 10)

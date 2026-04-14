@@ -15,11 +15,9 @@ const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // 1. Pull the cart data from the Redux store
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
-  // 2. Handlers for changing quantity or deleting items
   const addToCartHandler = async (product, qty) => {
     dispatch(addToCart({ ...product, qty }));
   };
@@ -29,7 +27,6 @@ const CartScreen = () => {
   };
 
   const checkoutHandler = () => {
-    // Later, this will check if the user is logged in before taking them to shipping
     navigate("/login?redirect=/shipping");
   };
 
@@ -38,7 +35,6 @@ const CartScreen = () => {
       <Col md={8}>
         <h1 style={{ marginBottom: "20px" }}>Shopping Cart</h1>
 
-        {/* If cart is empty, show a message. Otherwise, show the list. */}
         {cartItems.length === 0 ? (
           <div>
             Your cart is empty. <Link to="/">Go Back</Link>
@@ -54,7 +50,7 @@ const CartScreen = () => {
                   <Col md={3}>
                     <Link to={`/product/${item._id}`}>{item.name}</Link>
                   </Col>
-                  <Col md={2}>${item.price}</Col>
+                  <Col md={2}>₹{item.price}</Col>
                   <Col md={2}>
                     <Form.Control
                       as="select"
@@ -97,7 +93,7 @@ const CartScreen = () => {
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items
               </h2>
-              {/* Calculate total price */}$
+              ₹
               {cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
                 .toFixed(2)}

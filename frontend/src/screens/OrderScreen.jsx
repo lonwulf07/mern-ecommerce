@@ -23,7 +23,6 @@ const OrderScreen = () => {
   const [loadingDeliver, setLoadingDeliver] = useState(false);
   const [paypalClientId, setPaypalClientId] = useState("");
 
-  // We need the token to prove we are allowed to view this receipt
   const { userInfo } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -46,12 +45,10 @@ const OrderScreen = () => {
       setPaypalClientId(data.clientId);
     };
 
-    // If we don't have the order yet, OR if we have the wrong order, fetch it!
     if (!order || order._id !== orderId) {
       fetchOrder();
     }
 
-    // Fetch the PayPal ID if we don't have it yet
     if (!paypalClientId) {
       fetchPayPalId();
     }
@@ -67,7 +64,6 @@ const OrderScreen = () => {
     });
   };
 
-  // This fires when the user successfully completes the PayPal popup
   const onApprove = async (data, actions) => {
     const details = await actions.order.capture();
     try {
@@ -79,11 +75,9 @@ const OrderScreen = () => {
         },
       };
 
-      // Tell our backend it was successful!
       await axios.put(`/api/orders/${orderId}/pay`, details, config);
 
       setLoadingPay(false);
-      // Reload the page to show the green "Paid" alert
       window.location.reload();
     } catch (err) {
       setLoadingPay(false);
@@ -98,11 +92,9 @@ const OrderScreen = () => {
         headers: { Authorization: `Bearer ${userInfo.token}` },
       };
 
-      // Ping our new backend route
       await axios.put(`/api/orders/${orderId}/deliver`, {}, config);
 
       setLoadingDeliver(false);
-      // Reload the page to instantly show the green "Delivered" alert!
       window.location.reload();
     } catch (err) {
       setLoadingDeliver(false);
@@ -119,7 +111,6 @@ const OrderScreen = () => {
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
-            {/* SHIPPING DETAILS */}
             <ListGroup.Item>
               <h2>Shipping</h2>
               <p>
@@ -135,7 +126,6 @@ const OrderScreen = () => {
                 {order.shippingAddress.postalCode},{" "}
                 {order.shippingAddress.country}
               </p>
-              {/* Delivery Status Alert */}
               {order.isDelivered ? (
                 <Alert variant="success">
                   Delivered on {order.deliveredAt}
@@ -145,14 +135,12 @@ const OrderScreen = () => {
               )}
             </ListGroup.Item>
 
-            {/* PAYMENT DETAILS */}
             <ListGroup.Item>
               <h2>Payment Method</h2>
               <p>
                 <strong>Method: </strong>
                 {order.paymentMethod}
               </p>
-              {/* Payment Status Alert */}
               {order.isPaid ? (
                 <Alert variant="success">
                   Paid on {order.paidAt.substring(0, 10)}
@@ -162,7 +150,6 @@ const OrderScreen = () => {
               )}
             </ListGroup.Item>
 
-            {/* ORDER ITEMS */}
             <ListGroup.Item>
               <h2>Order Items</h2>
               {order.orderItems.length === 0 ? (
@@ -186,7 +173,7 @@ const OrderScreen = () => {
                           </Link>
                         </Col>
                         <Col md={4}>
-                          {item.qty} x ${item.price} = $
+                          {item.qty} x ₹{item.price} = ₹
                           {(item.qty * item.price).toFixed(2)}
                         </Col>
                       </Row>
@@ -198,7 +185,6 @@ const OrderScreen = () => {
           </ListGroup>
         </Col>
 
-        {/* ORDER SUMMARY */}
         <Col md={4}>
           <Card>
             <ListGroup variant="flush">
@@ -208,19 +194,19 @@ const OrderScreen = () => {
               <ListGroup.Item>
                 <Row>
                   <Col>Items</Col>
-                  <Col>${order.itemsPrice.toFixed(2)}</Col>
+                  <Col>₹{order.itemsPrice.toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Shipping</Col>
-                  <Col>${order.shippingPrice.toFixed(2)}</Col>
+                  <Col>₹{order.shippingPrice.toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
                 <Row>
                   <Col>Tax</Col>
-                  <Col>${order.taxPrice.toFixed(2)}</Col>
+                  <Col>₹{order.taxPrice.toFixed(2)}</Col>
                 </Row>
               </ListGroup.Item>
               <ListGroup.Item>
@@ -229,7 +215,7 @@ const OrderScreen = () => {
                     <strong>Total</strong>
                   </Col>
                   <Col>
-                    <strong>${order.totalPrice.toFixed(2)}</strong>
+                    <strong>₹{order.totalPrice.toFixed(2)}</strong>
                   </Col>
                 </Row>
               </ListGroup.Item>
@@ -240,14 +226,13 @@ const OrderScreen = () => {
                     <PayPalScriptProvider
                       options={{
                         "client-id": paypalClientId,
-                        currency: "USD", // FORCE USD CURRENCY
+                        currency: "INR",
                         intent: "capture",
                       }}
                     >
                       <PayPalButtons
                         createOrder={createOrder}
                         onApprove={onApprove}
-                        // Catch the silent errors!
                         onError={(err) => {
                           console.error("PayPal Button Error:", err);
                           alert("PayPal failed to load. Check console.");

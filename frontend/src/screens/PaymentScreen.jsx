@@ -9,18 +9,14 @@ const PaymentScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Pull the cart from Redux
   const cart = useSelector((state) => state.cart);
   const { shippingAddress, paymentMethod } = cart;
 
-  // Initialize state with the Redux payment method, defaulting to 'PayPal'
   const [paymentMethodName, setPaymentMethodName] = useState(
     paymentMethod || "PayPal",
   );
 
   useEffect(() => {
-    // Security check: If they somehow got to this screen without a shipping address,
-    // kick them back to the shipping screen!
     if (!shippingAddress.address) {
       navigate("/shipping");
     }
@@ -28,15 +24,12 @@ const PaymentScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    // Save their choice to Redux
     dispatch(savePaymentMethod(paymentMethodName));
-    // Move to the final review screen
     navigate("/placeorder");
   };
 
   return (
     <div style={{ maxWidth: "500px", margin: "auto" }}>
-      {/* Highlight steps 1, 2, and 3 */}
       <CheckoutSteps step1 step2 step3 />
 
       <h1>Payment Method</h1>
@@ -55,8 +48,7 @@ const PaymentScreen = () => {
               onChange={(e) => setPaymentMethodName(e.target.value)}
             ></Form.Check>
 
-            {/* If you wanted to add Stripe later, you would just uncomment this! */}
-            {/* <Form.Check
+            <Form.Check
               className="my-2"
               type="radio"
               label="Stripe"
@@ -66,7 +58,7 @@ const PaymentScreen = () => {
               checked={paymentMethodName === 'Stripe'}
               onChange={(e) => setPaymentMethodName(e.target.value)}
             ></Form.Check> 
-            */}
+    
           </Col>
         </Form.Group>
 

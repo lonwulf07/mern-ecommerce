@@ -27,7 +27,6 @@ const Header = () => {
                 <i className="fas fa-shopping-cart"></i> Cart
               </Nav.Link>
 
-              {/* Conditional Rendering: If logged in, show name. If not, show Sign In */}
               {userInfo ? (
                 <NavDropdown title={userInfo.name} id="username">
                   <NavDropdown.Item href="/profile">Profile</NavDropdown.Item>
@@ -43,7 +42,6 @@ const Header = () => {
                 </Navigate>
               )}
 
-              {/* NEW: Admin Dropdown (Only shows if user is an Admin!) */}
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="Admin" id="adminmenu">
                   <NavDropdown.Item href="/admin/productlist">
