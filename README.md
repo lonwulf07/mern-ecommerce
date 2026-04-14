@@ -11,6 +11,10 @@ I built this project to master full-stack state management, secure API architect
 
 ---
 
+## 📸 Overview
+
+**[🚀 View Live Project](https://mern-ecommerce-tau-six.vercel.app/)**
+
 ## 📸 Project Screenshots
 
 <img width="1920" height="932" alt="2026-04-10 13_35_28-" src="https://github.com/user-attachments/assets/9e6bd32f-f7a1-44c0-9646-fc29f92f4f3d" />
