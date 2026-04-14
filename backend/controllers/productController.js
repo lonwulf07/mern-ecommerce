@@ -5,31 +5,24 @@ import Product from "../models/productModel.js";
 // @access  Public
 export const getProducts = async (req, res) => {
     try {
-        // 1. Pagination Settings: How many items per page?
-        const pageSize = 4; // Set to 4 so you can test it easily with your 6 seeded items!
+        const pageSize = 4;
         const page = Number(req.query.pageNumber) || 1;
 
-        // 2. Search Settings: Did the user type something in the search bar?
         const keyword = req.query.keyword
             ? {
                   name: {
                       $regex: req.query.keyword,
-                      $options: 'i', // Case-insensitive (matches "iphone" and "iPhone")
+                      $options: 'i', // case-insensitive search
                   },
               }
             : {};
 
-        // 3. Count total products that match the search so we know how many pages to make
         const count = await Product.countDocuments({ ...keyword });
 
-        // 4. Fetch the specific products for this page
-        // .limit() restricts the number of results
-        // .skip() skips the items from previous pages
         const products = await Product.find({ ...keyword })
             .limit(pageSize)
             .skip(pageSize * (page - 1));
 
-        // 5. Send back the products, the current page, and the total number of pages
         res.json({ products, page, pages: Math.ceil(count / pageSize) });
     } catch (error) {
         res.status(500).json({ message: 'Server Error fetching products' });
@@ -134,7 +127,6 @@ export const createProductReview = async (req, res) => {
         const product = await Product.findById(req.params.id);
 
         if (product) {
-            // 1. Check if this user has already reviewed this product
             const alreadyReviewed = product.reviews.find(
                 (r) => r.user.toString() === req.user._id.toString()
             );
@@ -143,7 +135,6 @@ export const createProductReview = async (req, res) => {
                 return res.status(400).json({ message: 'You have already reviewed this product!' });
             }
 
-            // 2. Build the review object
             const review = {
                 name: req.user.name,
                 rating: Number(rating),
@@ -151,13 +142,10 @@ export const createProductReview = async (req, res) => {
                 user: req.user._id,
             };
 
-            // 3. Add the review to the array
             product.reviews.push(review);
 
-            // 4. Update the total number of reviews
             product.numReviews = product.reviews.length;
 
-            // 5. Calculate the new average star rating (Total stars / Total reviews)
             product.rating =
                 product.reviews.reduce((acc, item) => item.rating + acc, 0) /
                 product.reviews.length;

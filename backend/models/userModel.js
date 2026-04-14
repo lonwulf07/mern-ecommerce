@@ -13,19 +13,19 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-// 1. Method to check if entered password matches the database password
+// Method to compare entered password with hashed password in the database
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// 2. Pre-save middleware: Runs BEFORE saving a user to the database
+// Middleware to hash the password before saving the user document
 userSchema.pre("save", async function (next) {
-  // If we are just updating a user's name/email, don't re-hash the password
+  // Only hash the password if it has been modified (or is new)
   if (!this.isModified("password")) {
     next();
   }
 
-  // Hash the password with a "salt" of 10 rounds (standard security)
+  // Generate a salt and hash the password
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });

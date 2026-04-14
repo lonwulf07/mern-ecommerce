@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
   {
-    // We reference the User model to know WHICH admin created this product
+    // Reference to the user who created the product
     user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
     name: { type: String, required: true },
     image: { type: String, required: true },

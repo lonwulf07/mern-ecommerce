@@ -8,10 +8,8 @@ export const authUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Find the user by email
     const user = await User.findOne({ email });
 
-    // If user exists AND the password matches
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
@@ -35,14 +33,12 @@ export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if user already exists
     const userExists = await User.findOne({ email });
 
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
 
-    // Create the user (password hashing happens automatically via our model)
     const user = await User.create({
       name,
       email,
@@ -73,13 +69,11 @@ export const updateUserProfile = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
-      // Update fields if they were provided in the request, otherwise keep the old ones
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
 
-      // Only update the password if a new one was actually typed in
       if (req.body.password) {
-        user.password = req.body.password; // Our pre-save Mongoose middleware will hash this automatically!
+        user.password = req.body.password; // Pre-saved Mongoose middleware will hash this automatically!
       }
 
       const updatedUser = await user.save();

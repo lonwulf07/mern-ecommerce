@@ -4,13 +4,13 @@ import multer from "multer";
 
 const router = express.Router();
 
-// 1. Tell Multer where to save the file and what to name it
+// Set up multer storage configuration
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, "uploads/"); // Save in the uploads folder
   },
   filename(req, file, cb) {
-    // Name it: fieldname-timestamp.extension (e.g., image-16312345.jpg)
+    // Use the original file name with a timestamp to avoid conflicts
     cb(
       null,
       `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`,
@@ -18,7 +18,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// 2. Security Check: Only allow image files
+// Check file type to allow only images
 function checkFileType(file, cb) {
   const filetypes = /jpg|jpeg|png/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
@@ -31,7 +31,7 @@ function checkFileType(file, cb) {
   }
 }
 
-// 3. Initialize Multer with our rules
+// Initialize multer with the defined storage and file filter
 const upload = multer({
   storage,
   fileFilter: function (req, file, cb) {
@@ -39,12 +39,11 @@ const upload = multer({
   },
 });
 
-// 4. The actual API Route
-// 'image' is the name of the field coming from the frontend form
+// Route to handle image upload
 router.post("/", upload.single("image"), (req, res) => {
   res.send({
     message: "Image Uploaded successfully",
-    // We replace backslashes with forward slashes for Windows compatibility
+    // Return the path to the uploaded image
     image: `/${req.file.path.replace(/\\/g, "/")}`,
   });
 });

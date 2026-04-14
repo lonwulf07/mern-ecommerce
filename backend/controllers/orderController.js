@@ -18,10 +18,9 @@ export const addOrderItems = async (req, res) => {
     if (orderItems && orderItems.length === 0) {
       return res.status(400).json({ message: "No order items" });
     } else {
-      // Create a new order object based on our Order Model
+      // Create a new order instance with the provided data
       const order = new Order({
         orderItems,
-        // THIS is why we needed the protect middleware! It attached the user to req.user.
         user: req.user._id,
         shippingAddress,
         paymentMethod,
@@ -31,10 +30,8 @@ export const addOrderItems = async (req, res) => {
         totalPrice,
       });
 
-      // Save it to MongoDB
       const createdOrder = await order.save();
 
-      // Send back a 201 (Created) status and the new order data
       res.status(201).json(createdOrder);
     }
   } catch (error) {
@@ -47,8 +44,6 @@ export const addOrderItems = async (req, res) => {
 // @access  Private (You must be logged in to see a receipt!)
 export const getOrderById = async (req, res) => {
   try {
-    // .populate() is Mongoose magic. It looks at the User ID attached to the order,
-    // goes to the User collection, and grabs that user's name and email to attach to this result!
     const order = await Order.findById(req.params.id).populate(
       "user",
       "name email",
@@ -75,7 +70,6 @@ export const updateOrderToPaid = async (req, res) => {
       order.isPaid = true;
       order.paidAt = Date.now();
 
-      // This data comes directly from PayPal after a successful transaction
       order.paymentResult = {
         id: req.body.id,
         status: req.body.status,
@@ -98,7 +92,6 @@ export const updateOrderToPaid = async (req, res) => {
 // @access  Private
 export const getMyOrders = async (req, res) => {
   try {
-    // Find all orders where the 'user' field matches the ID of the logged-in user
     const orders = await Order.find({ user: req.user._id });
     res.json(orders);
   } catch (error) {
@@ -111,7 +104,6 @@ export const getMyOrders = async (req, res) => {
 // @access  Private/Admin
 export const getOrders = async (req, res) => {
     try {
-        // .populate('user', 'id name') attaches the name of the buyer so we can display it!
         const orders = await Order.find({}).populate('user', 'id name');
         res.json(orders);
     } catch (error) {

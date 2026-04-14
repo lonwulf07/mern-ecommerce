@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-    // Which user placed the order?
+    // Reference to the user who placed the order
     user: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 
     // Array of items in the cart
@@ -29,7 +29,7 @@ const orderSchema = new mongoose.Schema(
 
     paymentMethod: { type: String, required: true },
     paymentResult: {
-      // Data we get back from Stripe after payment
+      // These fields will be filled by the payment gateway (e.g., PayPal) after payment is processed
       id: { type: String },
       status: { type: String },
       update_time: { type: String },

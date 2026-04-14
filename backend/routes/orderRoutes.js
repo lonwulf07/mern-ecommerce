@@ -11,7 +11,9 @@ import { protect, admin } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// The route is protected, meaning the user MUST have a valid token to proceed to addOrderItems
+// @route   POST /api/orders
+// @desc    Create new order
+// @access  Private
 router.route("/")
    .post(protect, addOrderItems)
    .get(protect, admin, getOrders);

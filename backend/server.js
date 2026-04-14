@@ -8,16 +8,12 @@ import orderRoutes from "./routes/orderRoutes.js";
 import path from 'path'; // Node's built-in path module
 import uploadRoutes from './routes/uploadRoutes.js';
 
-// 1. Load environment variables
 dotenv.config();
 
-// 2. Connect to the Database
 connectDB();
 
-// 3. Initialize Express application
 const app = express();
 
-// 4. Setup Middleware
 app.use(cors());
 app.use(express.json());
 app.use("/api/products", productRoutes);
@@ -32,12 +28,10 @@ app.get("/api/config/paypal", (req, res) =>
   res.send({ clientId: process.env.PAYPAL_CLIENT_ID }),
 );
 
-// 5. Create a basic test route
 app.get("/", (req, res) => {
   res.send("E-commerce API is running successfully!");
 });
 
-// 6. Define the port and start the server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

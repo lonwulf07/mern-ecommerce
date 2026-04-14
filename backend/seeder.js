@@ -5,18 +5,16 @@ import User from "./models/userModel.js";
 import Product from "./models/productModel.js";
 import Order from "./models/orderModel.js";
 
-// Load env variables and connect to DB
 dotenv.config();
 connectDB();
 
 const importData = async () => {
   try {
-    // 1. Clear out any existing data so we start fresh
+    // Clear existing data from the collections
     await Order.deleteMany();
     await Product.deleteMany();
     await User.deleteMany();
 
-    // 2. Create a dummy Admin user
     const createdUsers = await User.insertMany([
       {
         name: "Admin User",
@@ -29,7 +27,7 @@ const importData = async () => {
     // Grab the ID of that newly created admin
     const adminUserId = createdUsers[0]._id;
 
-    // 3. Create sample products and attach the Admin's ID to them
+    // Sample products to insert, all linked to the admin user
     const sampleProducts = [
       {
         user: adminUserId,
